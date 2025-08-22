@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.jesuskrastev.ailingo.ui.features.games.GamesScreen
 import com.jesuskrastev.ailingo.ui.features.home.HomeScreen
+import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyScreen
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
                 ) { paddingValues ->
-                    HomeScreen(
+                    VocabularyScreen(
                         modifier = Modifier.padding(paddingValues),
                     )
                 }
