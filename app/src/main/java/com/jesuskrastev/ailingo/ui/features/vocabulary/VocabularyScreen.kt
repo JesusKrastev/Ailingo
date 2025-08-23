@@ -76,6 +76,7 @@ fun Summary(
                 withStyle(
                     style = SpanStyle(
                         fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 ) {
                     append(" 30 palabras nuevas ")
@@ -87,8 +88,8 @@ fun Summary(
         Button(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             ),
             shape = RoundedCornerShape(12.dp),
             onClick = { /*TODO*/ }
@@ -108,8 +109,8 @@ fun Summary(
         Button(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
             shape = RoundedCornerShape(12.dp),
             onClick = { /*TODO*/ }
@@ -137,7 +138,7 @@ fun VocabularyTopAppBar(
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
-            Text("Vocabulary")
+            Text("Vocabulario")
         },
     )
 }
