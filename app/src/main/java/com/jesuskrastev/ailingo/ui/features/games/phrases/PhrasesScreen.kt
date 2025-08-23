@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayCircle
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -57,7 +53,7 @@ fun Phrase(
 }
 
 @Composable
-fun PhrasesContent(
+fun PhrasesGameContent(
     modifier: Modifier = Modifier,
 ) {
     val animatedProgress = animateFloatAsState(
@@ -172,7 +168,7 @@ fun NextButton(
 }
 
 @Composable
-fun PhrasesScreen(
+fun PhrasesGameScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -181,7 +177,7 @@ fun PhrasesScreen(
             NextButton()
         },
     ) { paddingValues ->
-        PhrasesContent(
+        PhrasesGameContent(
             modifier = Modifier.padding(paddingValues),
         )
     }
