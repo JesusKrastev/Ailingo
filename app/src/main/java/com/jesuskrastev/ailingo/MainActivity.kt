@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.jesuskrastev.ailingo.ui.features.components.NavBar
 import com.jesuskrastev.ailingo.ui.features.games.GamesScreen
+import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesScreen
 import com.jesuskrastev.ailingo.ui.features.home.HomeScreen
 import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyScreen
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    GamesScreen(
+                    PhrasesScreen(
                         modifier = Modifier.padding(paddingValues),
                     )
                 }
