@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    GamesScreen(
+                    VocabularyScreen(
                         modifier = Modifier.padding(paddingValues),
                     )
                 }

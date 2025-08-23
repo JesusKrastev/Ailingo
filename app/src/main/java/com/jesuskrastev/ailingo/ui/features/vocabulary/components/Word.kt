@@ -1,13 +1,11 @@
-package com.jesuskrastev.ailingo.ui.features.vocabulary
+package com.jesuskrastev.ailingo.ui.features.vocabulary.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,8 +25,7 @@ fun Word(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -48,9 +45,5 @@ fun Word(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        HorizontalDivider(
-            modifier = Modifier,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
-        )
     }
 }
