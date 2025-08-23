@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChangeCircle
+import androidx.compose.material.icons.filled.CompareArrows
 import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Reorder
@@ -39,7 +40,7 @@ fun GameList(
     )
     val games = listOf(
         GameItem(
-            icon = Icons.Default.ChangeCircle,
+            icon = Icons.Default.CompareArrows,
             title = "Empareja Palabras",
             difficulty = "Fácil",
             color = Color(0xFF2ED573),
