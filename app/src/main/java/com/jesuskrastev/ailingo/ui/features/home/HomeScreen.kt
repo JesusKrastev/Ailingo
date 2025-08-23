@@ -24,9 +24,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -44,8 +47,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
 
 @Composable
@@ -163,7 +168,7 @@ fun DailyProgress(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Tu meta diaria",
+                    text = "Progreso diario",
                     fontWeight = FontWeight.SemiBold,
                 )
                 Row {
@@ -250,7 +255,7 @@ fun QuickAccessList(
             text = "Ejercicios",
         ),
         Activity(
-            icon = Icons.Default.Book,
+            icon = Icons.Default.TextFields,
             text = "Vocabulario",
         ),
         Activity(
@@ -258,8 +263,8 @@ fun QuickAccessList(
             text = "Pronunciación",
         ),
         Activity(
-            icon = Icons.Default.VideogameAsset,
-            text = "Juegos",
+            icon = Icons.Default.Book,
+            text = "Historias",
         ),
     )
 
@@ -309,15 +314,17 @@ fun Greetings(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        AsyncImage(
             modifier = Modifier
                 .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer),
+                .clip(CircleShape),
+                model = "https://i.pinimg.com/736x/d9/d8/8e/d9d88e3d1f74e2b8ced3df051cecb81d.jpg",
+            contentDescription = "Perfil",
+            contentScale = ContentScale.Crop,
         )
         Column {
             Text(
-                text = "¡Hola, Juan!",
+                text = "¡Hola, Jesús!",
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleLarge,
             )
