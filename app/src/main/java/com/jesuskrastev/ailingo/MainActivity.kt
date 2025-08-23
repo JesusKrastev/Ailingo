@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    HomeScreen(
+                    GamesScreen(
                         modifier = Modifier.padding(paddingValues),
                     )
                 }
