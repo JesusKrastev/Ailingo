@@ -17,20 +17,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.TextFields
-import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,15 +41,86 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
+import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
 
 @Composable
-fun WordOfTheDay(
+fun TermOfTheDay(
+    modifier: Modifier = Modifier,
+    term: TermState,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        SectionTitle(
+            title = "Palabra del día"
+        )
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Column {
+                    WordTitle(word = term.term)
+                    WordSubtitle(word = term.translation)
+                }
+                WordDescription(
+                    description = term.definition,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun WordTitleLoader(
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier.shimmerEffect(),
+        text = "Example",
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = Color.Transparent,
+    )
+}
+
+@Composable
+fun WordSubtitleLoader(
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier.shimmerEffect(),
+        text = "Ejemplo",
+        color = Color.Transparent,
+    )
+}
+
+@Composable
+fun WordDescriptionLoader(
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier.shimmerEffect(),
+        text = "This is an example description. It can be longer than the title.",
+        style = MaterialTheme.typography.bodyLarge,
+        color = Color.Transparent,
+    )
+}
+
+@Composable
+fun TermOfTheDayLoader(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -74,12 +140,10 @@ fun WordOfTheDay(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Column {
-                    WordTitle(word = "Serendipty")
-                    WordSubtitle(word = "Casualidad")
+                    WordTitleLoader()
+                    WordSubtitleLoader()
                 }
-                WordDescription(
-                    description = "Is the occurrence of finding something good or valuable unexpectedly."
-                )
+                WordDescriptionLoader()
             }
         }
     }
@@ -112,8 +176,12 @@ fun WordSubtitle(
 }
 
 @Composable
-fun WordDescription(description: String) {
+fun WordDescription(
+    modifier: Modifier = Modifier,
+    description: String,
+) {
     Text(
+        modifier = modifier,
         text = description,
         style = MaterialTheme.typography.bodyLarge,
     )
@@ -340,6 +408,7 @@ fun Greetings(
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
+    state: HomeState,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -356,7 +425,12 @@ fun HomeContent(
             PracticeButton()
         }
         item {
-            WordOfTheDay()
+            if(!state.isLoading)
+                TermOfTheDay(
+                    term = state.term,
+                )
+            else
+                TermOfTheDayLoader()
         }
         item {
             QuickAccessList()
@@ -368,6 +442,7 @@ fun HomeContent(
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    state: HomeState,
 ) {
     Scaffold(
         modifier = modifier,
@@ -375,6 +450,7 @@ fun HomeScreen(
     ) { paddingValues ->
         HomeContent(
             modifier = Modifier.padding(paddingValues),
+            state = state,
         )
     }
 }
