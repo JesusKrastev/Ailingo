@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -319,8 +320,8 @@ fun QuickAccessList(
     )
     val activities = listOf(
         Activity(
-            icon = Icons.Default.Edit,
-            text = "Ejercicios",
+            icon = Icons.Default.VideogameAsset,
+            text = "Juegos",
         ),
         Activity(
             icon = Icons.Default.TextFields,
