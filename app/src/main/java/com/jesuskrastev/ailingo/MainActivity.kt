@@ -13,10 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesuskrastev.ailingo.ui.features.components.NavBar
-import com.jesuskrastev.ailingo.ui.features.games.history.HistoryGameScreen
-import com.jesuskrastev.ailingo.ui.features.home.HomeScreen
-import com.jesuskrastev.ailingo.ui.features.home.HomeState
-import com.jesuskrastev.ailingo.ui.features.home.HomeViewModel
+import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesGameScreen
+import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesState
+import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesVieModel
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,8 +25,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val vm: HomeViewModel = hiltViewModel()
-            val state by vm.state.collectAsStateWithLifecycle(initialValue = HomeState())
+            val vm: PhrasesVieModel = hiltViewModel()
+            val state by vm.state.collectAsStateWithLifecycle(initialValue = PhrasesState())
             AilingoTheme {
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
@@ -35,9 +34,10 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    HomeScreen(
+                    PhrasesGameScreen(
                         modifier = Modifier.padding(paddingValues),
                         state = state,
+                        onEvent = vm::onEvent,
                     )
                 }
             }
