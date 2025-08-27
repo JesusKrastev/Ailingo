@@ -13,6 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesuskrastev.ailingo.ui.features.components.NavBar
+import com.jesuskrastev.ailingo.ui.features.games.GamesScreen
+import com.jesuskrastev.ailingo.ui.features.games.order.OrderGameScreen
+import com.jesuskrastev.ailingo.ui.features.games.order.OrderState
+import com.jesuskrastev.ailingo.ui.features.games.order.OrderViewModel
 import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesState
 import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesVieModel
@@ -25,8 +29,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val vm: PhrasesVieModel = hiltViewModel()
-            val state by vm.state.collectAsStateWithLifecycle(initialValue = PhrasesState())
+            val vm: OrderViewModel = hiltViewModel()
+            val state by vm.state.collectAsStateWithLifecycle(initialValue = OrderState())
             AilingoTheme {
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
@@ -34,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    PhrasesGameScreen(
+                    OrderGameScreen(
                         modifier = Modifier.padding(paddingValues),
                         state = state,
                         onEvent = vm::onEvent,
