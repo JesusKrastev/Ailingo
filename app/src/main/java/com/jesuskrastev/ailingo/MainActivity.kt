@@ -13,13 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesuskrastev.ailingo.ui.features.components.NavBar
-import com.jesuskrastev.ailingo.ui.features.games.GamesScreen
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderState
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderViewModel
-import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesGameScreen
-import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesState
-import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesVieModel
+import com.jesuskrastev.ailingo.ui.features.games.stories.HistoryGameScreen
+import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesState
+import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesViewModel
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +28,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val vm: OrderViewModel = hiltViewModel()
-            val state by vm.state.collectAsStateWithLifecycle(initialValue = OrderState())
+            val vm: StoriesViewModel = hiltViewModel()
+            val state by vm.state.collectAsStateWithLifecycle(initialValue = StoriesState())
             AilingoTheme {
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
@@ -38,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    OrderGameScreen(
+                    HistoryGameScreen(
                         modifier = Modifier.padding(paddingValues),
                         state = state,
                         onEvent = vm::onEvent,
