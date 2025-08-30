@@ -19,7 +19,7 @@ class MatchViewModel @Inject constructor() : ViewModel() {
     private val _state = MutableStateFlow<MatchState>(MatchState())
     val state: StateFlow<MatchState> = _state
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-2.5-pro",
+        modelName = "gemini-2.5-flash",
         apiKey = BuildConfig.apiKey
     )
 
@@ -34,15 +34,20 @@ class MatchViewModel @Inject constructor() : ViewModel() {
                     text(
                         """
                         Generate a JSON array containing exactly 10 inner arrays.
-                        Each inner array must contain exactly 8 objects: 4 original words and their 4 corresponding translations order randomly.
+                        The JSON array must contain exactly 10 inner arrays.
+                        Each inner array must represent a list of words with exactly 8 objects: 4 original words and their 4 corresponding translations.
                         
-                        Each object must follow this model:  
-                        - "id": a unique string identifier for the word 
-                        - "text": the word in the original language 
+                        Each object must follow this model:
+                        - "id": a unique string identifier for the word
+                        - "text": the word in the original language
                         - "translationId": the unique string identifier of its correct translation
                         - "isTranslation": a boolean indicating if this object is a translation (true for translation, false for original word)
                         
-                        Shuffle the order of the outr arrays, and also shuffle the position of words inside each pair randomly.
+                        Important:
+                        - The outer array must contain exactly 10 inner arrays (games).
+                        - Each inner array must be randomized: the 8 objects should appear in a random order, not grouped as pairs.
+                        - Also shuffle the order of the outer arrays themselves.
+                        
                         Return ONLY the JSON array in a single line, without Markdown, without code fences, and without extra text.
                         
                         Example:  
@@ -51,7 +56,6 @@ class MatchViewModel @Inject constructor() : ViewModel() {
                     )
                 }
             )
-            Log.d("MatchViewModel", "Response: ${response?.text}")
 
             try {
                 val words = response?.text?.let { Json.decodeFromString<List<List<Word>>>(it) } ?: emptyList()
