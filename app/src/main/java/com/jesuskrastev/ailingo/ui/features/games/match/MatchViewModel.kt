@@ -19,7 +19,7 @@ class MatchViewModel @Inject constructor() : ViewModel() {
     private val _state = MutableStateFlow<MatchState>(MatchState())
     val state: StateFlow<MatchState> = _state
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-2.5-flash",
+        modelName = "gemini-2.5-pro",
         apiKey = BuildConfig.apiKey
     )
 
@@ -51,13 +51,13 @@ class MatchViewModel @Inject constructor() : ViewModel() {
                     )
                 }
             )
-            Log.d("PhrasesViewModel", "Response: ${response?.text}")
+            Log.d("MatchViewModel", "Response: ${response?.text}")
 
             try {
                 val words = response?.text?.let { Json.decodeFromString<List<List<Word>>>(it) } ?: emptyList()
                 _state.value = MatchState(words = words.map { it.map { it.toWordState() } })
             } catch(e: Exception) {
-                Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
+                Log.d("MatchViewModel", "Error decoding JSON: ${e.message}")
             }
         }
     }
