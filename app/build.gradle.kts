@@ -84,4 +84,6 @@ dependencies {
     kspAndroidTest(libs.dagger.hilt.android.compiler)
     // JSON parser
     implementation(libs.kotlinx.serialization.json)
+    // Splash
+    implementation(libs.androidx.core.splashscreen)
 }
