@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.rememberNavController
 import com.jesuskrastev.ailingo.ui.features.components.NavBar
 import com.jesuskrastev.ailingo.ui.features.games.match.MatchGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.match.MatchState
@@ -23,6 +24,7 @@ import com.jesuskrastev.ailingo.ui.features.games.order.OrderViewModel
 import com.jesuskrastev.ailingo.ui.features.games.stories.HistoryGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesState
 import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesViewModel
+import com.jesuskrastev.ailingo.ui.navigation.AilingoNavHost
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,19 +34,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            val vm: MatchViewModel = hiltViewModel()
-            val state by vm.state.collectAsStateWithLifecycle(initialValue = MatchState())
             AilingoTheme {
+                val navController = rememberNavController()
+
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
                     bottomBar = {
                         NavBar()
                     },
                 ) { paddingValues ->
-                    MatchGameScreen(
+                    AilingoNavHost(
                         modifier = Modifier.padding(paddingValues),
-                        state = state,
-                        onEvent = vm::onEvent
+                        navController = navController,
                     )
                 }
             }

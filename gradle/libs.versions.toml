@@ -16,6 +16,7 @@ room = "2.6.1"
 hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
 generativeai = "0.9.0"
+composeNavigation = "2.8.9"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 
 [libraries]
@@ -44,6 +45,7 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 
 [plugins]
 com-google-dagger = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

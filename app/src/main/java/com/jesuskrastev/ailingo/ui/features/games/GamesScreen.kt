@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChangeCircle
 import androidx.compose.material.icons.filled.CompareArrows
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.filled.SpaceBar
@@ -26,10 +24,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
 import com.jesuskrastev.ailingo.ui.features.games.components.Game
+import com.jesuskrastev.ailingo.ui.navigation.CompleteGameRoute
+import com.jesuskrastev.ailingo.ui.navigation.Destination
+import com.jesuskrastev.ailingo.ui.navigation.MatchGameRoute
+import com.jesuskrastev.ailingo.ui.navigation.OrderGameRoute
+import com.jesuskrastev.ailingo.ui.navigation.StoriesGameRoute
 
 @Composable
 fun GameList(
     modifier: Modifier = Modifier,
+    onNavigateToMatch: () -> Unit,
+    onNavigateToComplete: () -> Unit,
+    onNavigateToOrder: () -> Unit,
+    onNavigateToStories: () -> Unit,
 ) {
     @Immutable
     data class GameItem(
@@ -37,6 +44,7 @@ fun GameList(
         val title: String,
         val difficulty: String,
         val color: Color,
+        val onClick: () -> Unit,
     )
     val games = listOf(
         GameItem(
@@ -44,24 +52,28 @@ fun GameList(
             title = "Empareja Palabras",
             difficulty = "Fácil",
             color = Color(0xFF2ED573),
+            onClick = onNavigateToMatch,
         ),
         GameItem(
             icon = Icons.Default.SpaceBar,
             title = "Completa Frases",
             difficulty = "Intermedio",
             color = Color(0xFFFF9F43),
+            onClick = onNavigateToComplete,
         ),
         GameItem(
             icon = Icons.Default.Reorder,
             title = "Ordena\nFrases",
             difficulty = "Intermdio",
             color = Color(0xFF1E90FF),
+            onClick = onNavigateToOrder,
         ),
         GameItem(
             icon = Icons.Default.QuestionMark,
             title = "Responde Preguntas",
-            difficulty = "Difícil   ",
+            difficulty = "Difícil",
             color = Color(0xFFFF4757),
+            onClick = onNavigateToStories,
         ),
     )
 
@@ -79,6 +91,7 @@ fun GameList(
             title = game.title,
             color = game.color,
             icon = game.icon,
+            onClick = game.onClick,
         )
     }
 }
@@ -86,6 +99,7 @@ fun GameList(
 @Composable
 fun GamesContent(
     modifier: Modifier = Modifier,
+    onNavigateTo: (Destination) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -93,7 +107,12 @@ fun GamesContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        GameList()
+        GameList(
+            onNavigateToMatch = { onNavigateTo(MatchGameRoute) },
+            onNavigateToComplete = { onNavigateTo(CompleteGameRoute) },
+            onNavigateToOrder = { onNavigateTo(OrderGameRoute) },
+            onNavigateToStories = { onNavigateTo(StoriesGameRoute) },
+        )
     }
 }
 
@@ -101,6 +120,7 @@ fun GamesContent(
 @Composable
 fun GamesScreen(
     modifier: Modifier = Modifier,
+    onNavigateTo: (Destination) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -115,6 +135,7 @@ fun GamesScreen(
     ) { paddingValues ->
         GamesContent(
             modifier = Modifier.padding(paddingValues),
+            onNavigateTo = onNavigateTo,
         )
     }
 }

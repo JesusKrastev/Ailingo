@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
@@ -50,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
 import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
+import com.jesuskrastev.ailingo.ui.navigation.Destination
+import com.jesuskrastev.ailingo.ui.navigation.GamesRoute
 
 @Composable
 fun TermOfTheDay(
@@ -268,7 +269,7 @@ fun QuickAccess(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     text: String,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = modifier.clickable(onClick = onClick),
@@ -311,6 +312,7 @@ fun QuickAccess(
 @Composable
 fun QuickAccessList(
     modifier: Modifier = Modifier,
+    onNavigateToGames: () -> Unit,
 ) {
     @Immutable
     data class Activity(
@@ -322,6 +324,7 @@ fun QuickAccessList(
         Activity(
             icon = Icons.Default.VideogameAsset,
             text = "Juegos",
+            onClick = onNavigateToGames,
         ),
         Activity(
             icon = Icons.Default.TextFields,
@@ -356,6 +359,7 @@ fun QuickAccessList(
                 modifier = Modifier.fillMaxWidth(),
                 icon = activity.icon,
                 text = activity.text,
+                onClick = activity.onClick,
             )
         }
     }
@@ -410,6 +414,7 @@ fun Greetings(
 fun HomeContent(
     modifier: Modifier = Modifier,
     state: HomeState,
+    onNavigateTo: (Destination) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -434,7 +439,9 @@ fun HomeContent(
                 TermOfTheDayLoader()
         }
         item {
-            QuickAccessList()
+            QuickAccessList(
+                onNavigateToGames = { onNavigateTo(GamesRoute) },
+            )
         }
     }
 }
@@ -444,6 +451,7 @@ fun HomeContent(
 fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeState,
+    onNavigateTo: (Destination) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -452,6 +460,7 @@ fun HomeScreen(
         HomeContent(
             modifier = Modifier.padding(paddingValues),
             state = state,
+            onNavigateTo = onNavigateTo,
         )
     }
 }
