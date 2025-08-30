@@ -1,7 +1,6 @@
 package com.jesuskrastev.ailingo.ui.features.games.stories
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -18,8 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.RadioButtonChecked
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Button
@@ -30,8 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesEvent
+import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
+import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,7 +43,7 @@ fun Option(
     modifier: Modifier = Modifier,
     text: String,
     isAnswered: Boolean,
-    isCorrectAnswer: Boolean,
+    isCorrect: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -56,14 +51,14 @@ fun Option(
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = when {
-                isAnswered && isCorrectAnswer -> MaterialTheme.colorScheme.primary
-                isAnswered && isSelected && !isCorrectAnswer -> MaterialTheme.colorScheme.error
+                isAnswered && isCorrect -> MaterialTheme.colorScheme.primary
+                isAnswered && isSelected && !isCorrect -> MaterialTheme.colorScheme.error
                 isSelected -> MaterialTheme.colorScheme.primary
                 else -> MaterialTheme.colorScheme.surfaceVariant
             },
             contentColor = when {
-                isAnswered && isCorrectAnswer -> MaterialTheme.colorScheme.onPrimary
-                isAnswered && isSelected && !isCorrectAnswer -> MaterialTheme.colorScheme.onError
+                isAnswered && isCorrect -> MaterialTheme.colorScheme.onPrimary
+                isAnswered && isSelected && !isCorrect -> MaterialTheme.colorScheme.onError
                 isSelected -> MaterialTheme.colorScheme.onPrimary
                 else -> MaterialTheme.colorScheme.onSurfaceVariant
             },
@@ -139,7 +134,7 @@ fun Story(
                 text = option,
                 isSelected = story.selectedOption == option,
                 isAnswered = story.isAnswered,
-                isCorrectAnswer = story.correctOption == option,
+                isCorrect = story.correctOption == option,
                 onClick = {
                     if (!story.isAnswered) onSelectOption(option)
                 }
@@ -322,48 +317,6 @@ fun CheckButton(
 }
 
 @Composable
-fun Feedback(
-    modifier: Modifier = Modifier,
-    isCorrect: Boolean,
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCorrect) {
-                MaterialTheme.colorScheme.secondaryContainer
-            } else {
-                MaterialTheme.colorScheme.errorContainer
-            },
-            contentColor = if (isCorrect) {
-                MaterialTheme.colorScheme.onSecondaryContainer
-            } else {
-                MaterialTheme.colorScheme.onErrorContainer
-            },
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Icon(
-                imageVector = if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel,
-                contentDescription = if (isCorrect) "Correct" else "Incorrect",
-                modifier = Modifier.size(28.dp)
-            )
-            Text(
-                text = if (isCorrect) "¡Respuesta Correcta!" else "Respuesta Incorrecta",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
-@Composable
 fun ActionButtons(
     modifier: Modifier = Modifier,
     story: StoryState?,
@@ -374,20 +327,24 @@ fun ActionButtons(
 ) {
     when {
         isLast && story?.isAnswered == true ->
-            FinishButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Finalizar",
                 onClick = onFinish,
             )
 
         story?.isAnswered == true ->
-            NextButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Siguiente",
                 onClick = onNext,
             )
 
 
         else ->
-            CheckButton(
+            ActionButton(
+                modifier = modifier,
+                text = "Comprobar respuesta",
                 onClick = onCheck,
                 enabled = story?.selectedOption?.isNotEmpty() == true,
             )

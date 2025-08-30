@@ -18,14 +18,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -40,6 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
+import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
+import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -215,49 +211,6 @@ fun PhrasesList(
     }
 }
 
-
-@Composable
-fun Feedback(
-    modifier: Modifier = Modifier,
-    isCorrect: Boolean,
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCorrect) {
-                MaterialTheme.colorScheme.secondaryContainer
-            } else {
-                MaterialTheme.colorScheme.errorContainer
-            },
-            contentColor = if (isCorrect) {
-                MaterialTheme.colorScheme.onSecondaryContainer
-            } else {
-                MaterialTheme.colorScheme.onErrorContainer
-            },
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Icon(
-                imageVector = if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel,
-                contentDescription = if (isCorrect) "Correct" else "Incorrect",
-                modifier = Modifier.size(28.dp)
-            )
-            Text(
-                text = if (isCorrect) "¡Respuesta Correcta!" else "Respuesta Incorrecta",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
 @Composable
 fun Phrases(
     modifier: Modifier = Modifier,
@@ -409,80 +362,6 @@ fun PhrasesGameContent(
 }
 
 @Composable
-fun NextButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Siguiente",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun FinishButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Finalizar",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun CheckButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Verificiar respuesta",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
 fun ActionButtons(
     modifier: Modifier = Modifier,
     phrase: PhraseState?,
@@ -493,20 +372,24 @@ fun ActionButtons(
 ) {
     when {
         isLast && phrase?.isAnswered == true ->
-            FinishButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Finalizar",
                 onClick = onFinish,
             )
 
         phrase?.isAnswered == true ->
-            NextButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Siguiente",
                 onClick = onNext,
             )
 
 
         else ->
-            CheckButton(
+            ActionButton(
+                modifier = modifier,
+                text = "Comprobar respuesta",
                 onClick = onCheck,
                 enabled = phrase?.selectedOption?.isNotEmpty() == true,
             )

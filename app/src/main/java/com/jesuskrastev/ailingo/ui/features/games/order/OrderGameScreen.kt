@@ -37,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.composables.dashedBorder
+import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
+import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
 import kotlinx.coroutines.launch
 
 @Composable
@@ -454,48 +456,6 @@ fun CorrectAnswer(
 }
 
 @Composable
-fun Feedback(
-    modifier: Modifier = Modifier,
-    isCorrect: Boolean,
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCorrect) {
-                MaterialTheme.colorScheme.secondaryContainer
-            } else {
-                MaterialTheme.colorScheme.errorContainer
-            },
-            contentColor = if (isCorrect) {
-                MaterialTheme.colorScheme.onSecondaryContainer
-            } else {
-                MaterialTheme.colorScheme.onErrorContainer
-            },
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            Icon(
-                imageVector = if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel,
-                contentDescription = if (isCorrect) "Correct" else "Incorrect",
-                modifier = Modifier.size(28.dp)
-            )
-            Text(
-                text = if (isCorrect) "¡Respuesta Correcta!" else "Respuesta Incorrecta",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
-@Composable
 fun ActionButtons(
     modifier: Modifier = Modifier,
     shuffledPhrase: ShuffledPhraseState?,
@@ -506,20 +466,24 @@ fun ActionButtons(
 ) {
     when {
         isLast && shuffledPhrase?.isAnswered == true ->
-            FinishButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Finalizar",
                 onClick = onFinish,
             )
 
         shuffledPhrase?.isAnswered == true ->
-            NextButton(
+            ActionButton(
                 modifier = modifier,
+                text = "Siguiente",
                 onClick = onNext,
             )
 
 
         else ->
-            CheckButton(
+            ActionButton(
+                modifier = modifier,
+                text = "Comprobar respuesta",
                 onClick = onCheck,
                 enabled = shuffledPhrase?.selectedWords?.size == shuffledPhrase?.orderedWords?.size,
             )

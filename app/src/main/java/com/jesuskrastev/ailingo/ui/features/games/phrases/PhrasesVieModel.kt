@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.jesuskrastev.ailingo.BuildConfig
+import com.jesuskrastev.ailingo.models.Phrase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,20 +41,17 @@ class PhrasesVieModel @Inject constructor(
                         - "suffix": the part after the missing word
                         - "missingWord": the correct word that completes the sentence
                         - "options": an array of 4 words (including the correct one in a random position)
-                        - "selectedOption": an empty string
-                        - "isCorrect": false
-                        - "isAnswered": false
                         Return ONLY the JSON array in a single line, without Markdown, without code fences, and without extra text.
                         Example:
-                        [{"prefix":"I","suffix":"to school","missingWord":"go","options":["go","goes","going","gone"],"userAnswer":"","isCorrect":false,"isAnswered":false}]
+                        [{"prefix":"I","suffix":"to school","missingWord":"go","options":["go","goes","going","gone"]}]
                         """.trimIndent()
                     )
                 }
             )
 
             try {
-                val phrases = response?.text?.let { Json.decodeFromString<List<PhraseState>>(it) } ?: emptyList()
-                _state.value = PhrasesState(phrases = phrases)
+                val phrases = response?.text?.let { Json.decodeFromString<List<Phrase>>(it) } ?: emptyList()
+                _state.value = PhrasesState(phrases = phrases.map { it.toPhraseState() })
             } catch(e: Exception) {
                 Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
             }
@@ -78,10 +76,11 @@ class PhrasesVieModel @Inject constructor(
             is PhrasesEvent.OnCheckClicked -> {
                 val phraseIndex = event.phraseIndex
                 val updatedPhrases = _state.value.phrases.toMutableList()
-                val currentPhrase = updatedPhrases[phraseIndex].copy(
-                    isAnswered = true
+                val currentPhrase = updatedPhrases[phraseIndex]
+                val updatedPhrase = updatedPhrases[phraseIndex].copy(
+                    isAnswered = true,
                 )
-                updatedPhrases[phraseIndex] = currentPhrase
+                updatedPhrases[phraseIndex] = updatedPhrase
                 _state.value = _state.value.copy(phrases = updatedPhrases)
             }
         }

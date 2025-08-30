@@ -1,8 +1,8 @@
 package com.jesuskrastev.ailingo.ui.features.games.phrases
 
+import com.jesuskrastev.ailingo.models.Phrase
 import kotlinx.serialization.Serializable
 
-@Serializable
 data class PhraseState(
     val prefix: String = "",
     val suffix: String = "",
@@ -12,3 +12,11 @@ data class PhraseState(
     val isCorrect: Boolean = false,
     val isAnswered: Boolean = false,
 )
+
+fun Phrase.toPhraseState(): PhraseState =
+    PhraseState(
+        prefix = prefix,
+        suffix = suffix,
+        missingWord = missingWord,
+        options = options,
+    )
