@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -330,11 +329,11 @@ fun PhrasesLoader(
 }
 
 @Composable
-fun PhrasesGameContent(
+fun CompleteGameContent(
     modifier: Modifier = Modifier,
-    state: PhrasesState,
+    state: CompleteState,
     pagerState: PagerState,
-    onEvent: (PhrasesEvent) -> Unit,
+    onEvent: (CompleteEvent) -> Unit,
 ) {
     when {
         state.phrases.isEmpty() -> {
@@ -350,7 +349,7 @@ fun PhrasesGameContent(
                 phrases = state.phrases,
                 onSelectOption = { option ->
                     onEvent(
-                        PhrasesEvent.OnOptionSelected(
+                        CompleteEvent.OnOptionSelected(
                             option = option,
                             phraseIndex = pagerState.currentPage,
                         )
@@ -424,10 +423,10 @@ fun PhrasesBottomBar(
 }
 
 @Composable
-fun PhrasesGameScreen(
+fun CompleteGameScreen(
     modifier: Modifier = Modifier,
-    state: PhrasesState,
-    onEvent: (PhrasesEvent) -> Unit,
+    state: CompleteState,
+    onEvent: (CompleteEvent) -> Unit,
 ) {
     var pagerState = rememberPagerState(pageCount = { state.phrases.size })
     val coroutineScope = rememberCoroutineScope()
@@ -438,7 +437,7 @@ fun PhrasesGameScreen(
             PhrasesBottomBar(
                 phrase = state.phrases.getOrNull(pagerState.currentPage),
                 onCheck = {
-                    onEvent(PhrasesEvent.OnCheckClicked(pagerState.currentPage))
+                    onEvent(CompleteEvent.OnCheckClicked(pagerState.currentPage))
                 },
                 isLast = pagerState.currentPage == state.phrases.size - 1,
                 onFinish = {
@@ -453,7 +452,7 @@ fun PhrasesGameScreen(
             )
         },
     ) { paddingValues ->
-        PhrasesGameContent(
+        CompleteGameContent(
             modifier = Modifier.padding(paddingValues),
             state = state,
             onEvent = onEvent,

@@ -18,8 +18,8 @@ import javax.inject.Inject
 class PhrasesVieModel @Inject constructor(
 
 ) : ViewModel() {
-    private val _state = MutableStateFlow<PhrasesState>(PhrasesState())
-    val state: StateFlow<PhrasesState> = _state
+    private val _state = MutableStateFlow<CompleteState>(CompleteState())
+    val state: StateFlow<CompleteState> = _state
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
         apiKey = BuildConfig.apiKey
@@ -51,16 +51,16 @@ class PhrasesVieModel @Inject constructor(
 
             try {
                 val phrases = response?.text?.let { Json.decodeFromString<List<Phrase>>(it) } ?: emptyList()
-                _state.value = PhrasesState(phrases = phrases.map { it.toPhraseState() })
+                _state.value = CompleteState(phrases = phrases.map { it.toPhraseState() })
             } catch(e: Exception) {
                 Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
             }
         }
     }
 
-    fun onEvent(event: PhrasesEvent) {
+    fun onEvent(event: CompleteEvent) {
         when (event) {
-            is PhrasesEvent.OnOptionSelected -> {
+            is CompleteEvent.OnOptionSelected -> {
                 val phraseIndex = event.phraseIndex
                 val selectedOption = event.option
                 val updatedPhrases = _state.value.phrases.toMutableList()
@@ -73,7 +73,7 @@ class PhrasesVieModel @Inject constructor(
                 _state.value = _state.value.copy(phrases = updatedPhrases)
             }
 
-            is PhrasesEvent.OnCheckClicked -> {
+            is CompleteEvent.OnCheckClicked -> {
                 val phraseIndex = event.phraseIndex
                 val updatedPhrases = _state.value.phrases.toMutableList()
                 val currentPhrase = updatedPhrases[phraseIndex]
