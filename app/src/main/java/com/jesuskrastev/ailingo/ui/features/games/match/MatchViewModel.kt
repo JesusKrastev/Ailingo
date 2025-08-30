@@ -29,6 +29,7 @@ class MatchViewModel @Inject constructor() : ViewModel() {
 
     private fun loadWords() {
         viewModelScope.launch {
+            _state.value = MatchState(isLoading = true)
             val response = generativeModel.generateContent(
                 content {
                     text(
@@ -59,7 +60,10 @@ class MatchViewModel @Inject constructor() : ViewModel() {
 
             try {
                 val words = response?.text?.let { Json.decodeFromString<List<List<Word>>>(it) } ?: emptyList()
-                _state.value = MatchState(words = words.map { it.map { it.toWordState() } })
+                _state.value = MatchState(
+                    words = words.map { it.map { it.toWordState() } },
+                    isLoading = false,
+                )
             } catch(e: Exception) {
                 Log.d("MatchViewModel", "Error decoding JSON: ${e.message}")
             }

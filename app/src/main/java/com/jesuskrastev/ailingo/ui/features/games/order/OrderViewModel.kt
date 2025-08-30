@@ -31,6 +31,7 @@ class OrderViewModel @Inject constructor(
 
     private fun loadPhrases() {
         viewModelScope.launch {
+            _state.value = OrderState(isLoading = true)
             val response = generativeModel.generateContent(
                 content {
                     text(
@@ -50,7 +51,10 @@ class OrderViewModel @Inject constructor(
 
             try {
                  val shuffledPhrases = response?.text?.let { Json.decodeFromString<List<ShuffledPhrase>>(it) } ?: emptyList()
-                 _state.value = OrderState(shuffledPhrases = shuffledPhrases.map { it.toShuffledPhraseState() })
+                 _state.value = OrderState(
+                     shuffledPhrases = shuffledPhrases.map { it.toShuffledPhraseState() },
+                     isLoading = false,
+                 )
             } catch(e: Exception) {
                 Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
             }

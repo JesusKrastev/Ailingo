@@ -29,6 +29,7 @@ class StoriesViewModel @Inject constructor(): ViewModel() {
 
     private fun loadTexts() {
         viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
             val response = generativeModel.generateContent(
                 content {
                     text(
@@ -53,7 +54,10 @@ class StoriesViewModel @Inject constructor(): ViewModel() {
 
             try {
                 val stories = response?.text?.let { Json.decodeFromString<List<Story>>(it) } ?: emptyList()
-                _state.value = StoriesState(stories = stories.map { it.toStoryState() })
+                _state.value = StoriesState(
+                    stories = stories.map { it.toStoryState() },
+                    isLoading = false,
+                )
             } catch(e: Exception) {
                 Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
             }

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
 import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
+import com.jesuskrastev.ailingo.ui.features.games.components.Loading
 import kotlinx.coroutines.launch
 
 @Composable
@@ -196,7 +197,7 @@ fun Stories(
     pagerState: PagerState,
 ) {
     val animatedProgress = animateFloatAsState(
-        targetValue = 0.75f,
+        targetValue = (pagerState.currentPage + 1).toFloat() / pagerState.pageCount,
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
     )
 
@@ -227,90 +228,23 @@ fun HistoryGameContent(
     pagerState: PagerState,
     onEvent: (StoriesEvent) -> Unit,
 ) {
-    Stories(
-        modifier = modifier,
-        stories = state.stories,
-        pagerState = pagerState,
-        onSelectOption = { option ->
-            onEvent(
-                StoriesEvent.OnOptionSelected(
-                    storyIndex = pagerState.currentPage,
-                    option = option,
-                )
-            )
+    when {
+        state.isLoading -> {
+            Loading()
         }
-    )
-}
-
-@Composable
-fun NextButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Siguiente",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun FinishButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Finalizar",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun CheckButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Verificiar respuesta",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
+        else -> {
+            Stories(
+                modifier = modifier,
+                stories = state.stories,
+                pagerState = pagerState,
+                onSelectOption = { option ->
+                    onEvent(
+                        StoriesEvent.OnOptionSelected(
+                            storyIndex = pagerState.currentPage,
+                            option = option,
+                        )
+                    )
+                }
             )
         }
     }
@@ -391,22 +325,23 @@ fun HistoryGameScreen(
         modifier = modifier,
         contentWindowInsets = WindowInsets.statusBars,
         bottomBar = {
-            StoriesBottomBar(
-                story = state.stories.getOrNull(pagerState.currentPage),
-                onCheck = {
-                    onEvent(StoriesEvent.OnCheckClicked(pagerState.currentPage))
-                },
-                isLast = pagerState.currentPage == state.stories.size - 1,
-                onFinish = {
-                },
-                onNext = {
-                    val nextPage = pagerState.currentPage + 1
-                    if (nextPage < pagerState.pageCount)
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(nextPage)
-                        }
-                }
-            )
+            if(!state.isLoading)
+                StoriesBottomBar(
+                    story = state.stories.getOrNull(pagerState.currentPage),
+                    onCheck = {
+                        onEvent(StoriesEvent.OnCheckClicked(pagerState.currentPage))
+                    },
+                    isLast = pagerState.currentPage == state.stories.size - 1,
+                    onFinish = {
+                    },
+                    onNext = {
+                        val nextPage = pagerState.currentPage + 1
+                        if (nextPage < pagerState.pageCount)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(nextPage)
+                            }
+                    }
+                )
         },
     ) { paddingValues ->
         HistoryGameContent(

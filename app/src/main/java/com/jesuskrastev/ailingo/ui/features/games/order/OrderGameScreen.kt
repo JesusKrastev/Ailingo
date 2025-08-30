@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.composables.dashedBorder
 import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
 import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
+import com.jesuskrastev.ailingo.ui.features.games.components.Loading
 import kotlinx.coroutines.launch
 
 @Composable
@@ -326,98 +327,33 @@ fun OrderGameContent(
     onEvent: (OrderEvent) -> Unit,
     state: OrderState,
 ) {
-    ShuffledPhrases(
-        modifier = modifier,
-        pagerState = pagerState,
-        shuffledPhrases = state.shuffledPhrases,
-        onSelect = { word ->
-            onEvent(
-                OrderEvent.OnAddWord(
-                    phraseIndex = pagerState.currentPage,
-                    word = word
-                )
-            )
-        },
-        onDeselect = { word ->
-            onEvent(
-                OrderEvent.OnRemoveWord(
-                    phraseIndex = pagerState.currentPage,
-                    word = word
-                )
+    when {
+        state.isLoading -> {
+            Loading(
+                modifier = modifier,
             )
         }
-    )
-}
-
-@Composable
-fun NextButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Siguiente",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun CheckButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Verificiar respuesta",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun FinishButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Finalizar",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
+        else -> {
+            ShuffledPhrases(
+                modifier = modifier,
+                pagerState = pagerState,
+                shuffledPhrases = state.shuffledPhrases,
+                onSelect = { word ->
+                    onEvent(
+                        OrderEvent.OnAddWord(
+                            phraseIndex = pagerState.currentPage,
+                            word = word
+                        )
+                    )
+                },
+                onDeselect = { word ->
+                    onEvent(
+                        OrderEvent.OnRemoveWord(
+                            phraseIndex = pagerState.currentPage,
+                            word = word
+                        )
+                    )
+                }
             )
         }
     }
@@ -530,22 +466,23 @@ fun OrderGameScreen(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            OrderBottomBar(
-                shuffledPhrase = state.shuffledPhrases.getOrNull(pagerState.currentPage),
-                onCheck = {
-                    onEvent(OrderEvent.OnCheckClicked(pagerState.currentPage))
-                },
-                isLast = pagerState.currentPage == state.shuffledPhrases.size - 1,
-                onFinish = {
-                },
-                onNext = {
-                    val nextPage = pagerState.currentPage + 1
-                    if (nextPage < pagerState.pageCount)
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(nextPage)
-                        }
-                }
-            )
+            if(!state.isLoading)
+                OrderBottomBar(
+                    shuffledPhrase = state.shuffledPhrases.getOrNull(pagerState.currentPage),
+                    onCheck = {
+                        onEvent(OrderEvent.OnCheckClicked(pagerState.currentPage))
+                    },
+                    isLast = pagerState.currentPage == state.shuffledPhrases.size - 1,
+                    onFinish = {
+                    },
+                    onNext = {
+                        val nextPage = pagerState.currentPage + 1
+                        if (nextPage < pagerState.pageCount)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(nextPage)
+                            }
+                    }
+                )
         },
     ) { paddingValues ->
         OrderGameContent(

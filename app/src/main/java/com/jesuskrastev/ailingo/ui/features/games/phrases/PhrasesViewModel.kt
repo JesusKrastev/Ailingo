@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
-class PhrasesVieModel @Inject constructor(
+class PhrasesViewModel @Inject constructor(
 
 ) : ViewModel() {
     private val _state = MutableStateFlow<CompleteState>(CompleteState())
@@ -31,6 +31,7 @@ class PhrasesVieModel @Inject constructor(
 
     private fun loadPhrases() {
         viewModelScope.launch {
+            _state.value = CompleteState(isLoading = true)
             val response = generativeModel.generateContent(
                 content {
                     text(
@@ -51,7 +52,10 @@ class PhrasesVieModel @Inject constructor(
 
             try {
                 val phrases = response?.text?.let { Json.decodeFromString<List<Phrase>>(it) } ?: emptyList()
-                _state.value = CompleteState(phrases = phrases.map { it.toPhraseState() })
+                _state.value = CompleteState(
+                    phrases = phrases.map { it.toPhraseState() },
+                    isLoading = false,
+                )
             } catch(e: Exception) {
                 Log.d("PhrasesViewModel", "Error decoding JSON: ${e.message}")
             }

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
 import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
+import com.jesuskrastev.ailingo.ui.features.games.components.Loading
 import kotlinx.coroutines.launch
 
 @Composable
@@ -269,98 +270,33 @@ fun MatchGameContent(
     state: MatchState,
     onEvent: (MatchEvent) -> Unit,
 ) {
-    Words(
-        modifier = modifier,
-        pagerState = pagerState,
-        words = state.words,
-        onMatchOption = { wordState ->
-            onEvent(
-                MatchEvent.OnMatchWord(
-                    word = wordState,
-                    pageIndex = pagerState.currentPage,
-                )
-            )
-        },
-        onSelectOption = { wordState ->
-            onEvent(
-                MatchEvent.OnSelectWord(
-                    word = wordState,
-                    pageIndex = pagerState.currentPage,
-                )
+    when {
+        state.isLoading -> {
+            Loading(
+                modifier = modifier,
             )
         }
-    )
-}
-
-@Composable
-fun NextButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Siguiente",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun FinishButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Finalizar",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-            )
-        }
-    }
-}
-
-@Composable
-fun CheckButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    enabled: Boolean,
-) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
-        onClick = onClick,
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "Verificiar respuesta",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
+        else -> {
+            Words(
+                modifier = modifier,
+                pagerState = pagerState,
+                words = state.words,
+                onMatchOption = { wordState ->
+                    onEvent(
+                        MatchEvent.OnMatchWord(
+                            word = wordState,
+                            pageIndex = pagerState.currentPage,
+                        )
+                    )
+                },
+                onSelectOption = { wordState ->
+                    onEvent(
+                        MatchEvent.OnSelectWord(
+                            word = wordState,
+                            pageIndex = pagerState.currentPage,
+                        )
+                    )
+                }
             )
         }
     }
@@ -440,22 +376,23 @@ fun MatchGameScreen(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            MatchBottomBar(
-                words = state.words.getOrNull(pagerState.currentPage),
-                isLast = pagerState.currentPage == pagerState.pageCount - 1,
-                onCheck = {
-                    onEvent(MatchEvent.OnCheckClicked(pagerState.currentPage))
-                },
-                onFinish = {
-                },
-                onNext = {
-                    val nextPage = pagerState.currentPage + 1
-                    if (nextPage < pagerState.pageCount)
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(nextPage)
-                        }
-                }
-            )
+            if(!state.isLoading)
+                MatchBottomBar(
+                    words = state.words.getOrNull(pagerState.currentPage),
+                    isLast = pagerState.currentPage == pagerState.pageCount - 1,
+                    onCheck = {
+                        onEvent(MatchEvent.OnCheckClicked(pagerState.currentPage))
+                    },
+                    onFinish = {
+                    },
+                    onNext = {
+                        val nextPage = pagerState.currentPage + 1
+                        if (nextPage < pagerState.pageCount)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(nextPage)
+                            }
+                    }
+                )
         },
     ) { paddingValues ->
         MatchGameContent(

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
 import com.jesuskrastev.ailingo.ui.features.games.components.ActionButton
 import com.jesuskrastev.ailingo.ui.features.games.components.Feedback
+import com.jesuskrastev.ailingo.ui.features.games.components.Loading
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -245,90 +246,6 @@ fun Phrases(
 }
 
 @Composable
-fun IncompletePhraseLoader(
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier.shimmerEffect(),
-        color = Color.Transparent,
-        text = "Example phrase",
-        fontWeight = FontWeight.SemiBold,
-        style = MaterialTheme.typography.titleLarge,
-    )
-}
-
-@Composable
-fun ProgressBarLoader(
-    modifier: Modifier = Modifier,
-) {
-    LinearProgressIndicator(
-        progress = 0f,
-        modifier = modifier
-            .fillMaxWidth()
-            .shimmerEffect()
-            .height(10.dp)
-    )
-}
-
-@Composable
-fun TitleLoader(
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier.shimmerEffect(),
-        text = "Completa la frase:",
-        fontWeight = FontWeight.SemiBold,
-        style = MaterialTheme.typography.titleLarge,
-        color = Color.Transparent,
-    )
-}
-
-@Composable
-fun OptionLoader(
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .shimmerEffect(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = Color.Transparent,
-        ),
-        shape = RoundedCornerShape(12.dp),
-        onClick = {},
-    ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = "Example option",
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
-        )
-    }
-}
-
-@Composable
-fun PhrasesLoader(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        ProgressBarLoader()
-        TitleLoader()
-        IncompletePhraseLoader()
-        repeat(4) {
-            OptionLoader()
-        }
-    }
-}
-
-@Composable
 fun CompleteGameContent(
     modifier: Modifier = Modifier,
     state: CompleteState,
@@ -336,10 +253,8 @@ fun CompleteGameContent(
     onEvent: (CompleteEvent) -> Unit,
 ) {
     when {
-        state.phrases.isEmpty() -> {
-            PhrasesLoader(
-                modifier = modifier,
-            )
+        state.isLoading -> {
+            Loading()
         }
 
         else -> {
@@ -434,22 +349,23 @@ fun CompleteGameScreen(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            PhrasesBottomBar(
-                phrase = state.phrases.getOrNull(pagerState.currentPage),
-                onCheck = {
-                    onEvent(CompleteEvent.OnCheckClicked(pagerState.currentPage))
-                },
-                isLast = pagerState.currentPage == state.phrases.size - 1,
-                onFinish = {
-                },
-                onNext = {
-                    val nextPage = pagerState.currentPage + 1
-                    if (nextPage < pagerState.pageCount)
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(nextPage)
-                        }
-                }
-            )
+            if(state.isLoading)
+                PhrasesBottomBar(
+                    phrase = state.phrases.getOrNull(pagerState.currentPage),
+                    onCheck = {
+                        onEvent(CompleteEvent.OnCheckClicked(pagerState.currentPage))
+                    },
+                    isLast = pagerState.currentPage == state.phrases.size - 1,
+                    onFinish = {
+                    },
+                    onNext = {
+                        val nextPage = pagerState.currentPage + 1
+                        if (nextPage < pagerState.pageCount)
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(nextPage)
+                            }
+                    }
+                )
         },
     ) { paddingValues ->
         CompleteGameContent(
