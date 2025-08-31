@@ -8,30 +8,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.jesuskrastev.ailingo.ui.features.components.NavBar
-import com.jesuskrastev.ailingo.ui.features.games.match.MatchGameScreen
-import com.jesuskrastev.ailingo.ui.features.games.match.MatchState
-import com.jesuskrastev.ailingo.ui.features.games.match.MatchViewModel
-import com.jesuskrastev.ailingo.ui.features.games.match.WordState
-import com.jesuskrastev.ailingo.ui.features.games.order.OrderGameScreen
-import com.jesuskrastev.ailingo.ui.features.games.order.OrderState
-import com.jesuskrastev.ailingo.ui.features.games.order.OrderViewModel
-import com.jesuskrastev.ailingo.ui.features.games.stories.HistoryGameScreen
-import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesState
-import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesViewModel
 import com.jesuskrastev.ailingo.ui.navigation.AilingoNavHost
-import com.jesuskrastev.ailingo.ui.navigation.CompleteGameRoute
-import com.jesuskrastev.ailingo.ui.navigation.MatchGameRoute
-import com.jesuskrastev.ailingo.ui.navigation.OrderGameRoute
-import com.jesuskrastev.ailingo.ui.navigation.StoriesGameRoute
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,21 +24,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AilingoTheme {
                 val navController = rememberNavController()
-                val navBackStackEntry = navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry.value?.destination
-                val hiddenRoutes = listOf(
-                    MatchGameRoute::class,
-                    OrderGameRoute::class,
-                    StoriesGameRoute::class,
-                    CompleteGameRoute::class,
-                )
 
                 Scaffold(
                     contentWindowInsets = WindowInsets.navigationBars,
-                    bottomBar = {
-                        if (hiddenRoutes.none { currentRoute?.hasRoute(it) == true })
-                            NavBar()
-                    },
                 ) { paddingValues ->
                     AilingoNavHost(
                         modifier = Modifier.padding(paddingValues),
