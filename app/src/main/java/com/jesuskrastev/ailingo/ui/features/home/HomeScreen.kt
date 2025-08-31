@@ -52,6 +52,7 @@ import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
 import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
 import com.jesuskrastev.ailingo.ui.navigation.Destination
 import com.jesuskrastev.ailingo.ui.navigation.GamesRoute
+import com.jesuskrastev.ailingo.ui.navigation.VocabularyRoute
 
 @Composable
 fun TermOfTheDay(
@@ -314,6 +315,7 @@ fun QuickAccess(
 fun QuickAccessList(
     modifier: Modifier = Modifier,
     onNavigateToGames: () -> Unit,
+    onNavigateToVocabulary: () -> Unit,
 ) {
     @Immutable
     data class Activity(
@@ -330,6 +332,7 @@ fun QuickAccessList(
         Activity(
             icon = Icons.Default.TextFields,
             text = "Vocabulario",
+            onClick = onNavigateToVocabulary,
         ),
         Activity(
             icon = Icons.Default.Mic,
@@ -442,6 +445,7 @@ fun HomeContent(
         item {
             QuickAccessList(
                 onNavigateToGames = { onNavigateTo(GamesRoute) },
+                onNavigateToVocabulary = { onNavigateTo(VocabularyRoute) },
             )
         }
     }

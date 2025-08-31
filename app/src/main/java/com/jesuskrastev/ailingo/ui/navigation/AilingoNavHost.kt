@@ -34,5 +34,10 @@ fun AilingoNavHost(
         orderGameScreen()
         completeGameScreen()
         storiesGameScreen()
+        vocabularyScreen(
+            onNavigateTo = { destination ->
+                navController.navigate(destination)
+            },
+        )
     }
 }
