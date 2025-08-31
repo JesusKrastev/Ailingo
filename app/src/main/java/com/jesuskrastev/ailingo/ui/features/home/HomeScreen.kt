@@ -17,26 +17,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
@@ -44,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -385,76 +395,63 @@ fun SectionTitle(
 }
 
 @Composable
-fun Greetings(
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape),
-                model = "https://i.pinimg.com/736x/d9/d8/8e/d9d88e3d1f74e2b8ced3df051cecb81d.jpg",
-            contentDescription = "Perfil",
-            contentScale = ContentScale.Crop,
-        )
-        Column {
-            Text(
-                text = "¡Hola, Jesús!",
-                fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.titleLarge,
-            )
-            Text(
-                text = "Sigamos aprendiendo",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-@Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
     state: HomeState,
     onNavigateTo: (Destination) -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        item {
-            Greetings()
-        }
-        item {
-            DailyProgress()
-        }
-        item {
-            PracticeButton(
-                onClick = {
-                    onNavigateTo(ChatRoute)
-                },
+        DailyProgress()
+        PracticeButton(
+            onClick = {
+                onNavigateTo(ChatRoute)
+            },
+        )
+        if(!state.isLoading)
+            TermOfTheDay(
+                term = state.term,
             )
-        }
-        item {
-            if(!state.isLoading)
-                TermOfTheDay(
-                    term = state.term,
-                )
-            else
-                TermOfTheDayLoader()
-        }
-        item {
-            QuickAccessList(
-                onNavigateToGames = { onNavigateTo(GamesRoute) },
-                onNavigateToVocabulary = { onNavigateTo(VocabularyRoute) },
-            )
-        }
+        else
+            TermOfTheDayLoader()
+        QuickAccessList(
+            onNavigateToGames = { onNavigateTo(GamesRoute) },
+            onNavigateToVocabulary = { onNavigateTo(VocabularyRoute) },
+        )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopBar(
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+) {
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        scrollBehavior = scrollBehavior,
+        title = {
+            Text(
+                text = "Ailingo",
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = { /*TODO*/ }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Settings",
+                )
+            }
+        },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -464,8 +461,14 @@ fun HomeScreen(
     state: HomeState,
     onNavigateTo: (Destination) -> Unit,
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            HomeTopBar(scrollBehavior = scrollBehavior)
+        },
         contentWindowInsets = WindowInsets.statusBars,
     ) { paddingValues ->
         HomeContent(
