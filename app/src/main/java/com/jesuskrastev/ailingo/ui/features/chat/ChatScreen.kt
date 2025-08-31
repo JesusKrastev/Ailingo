@@ -192,7 +192,7 @@ fun ChatInput(
         },
         placeholder = {
             Text(
-                text = "Escribe tu mensaje aquí...",
+                text = "Mensaje",
                 style = MaterialTheme.typography.bodyLarge,
             )
         }
