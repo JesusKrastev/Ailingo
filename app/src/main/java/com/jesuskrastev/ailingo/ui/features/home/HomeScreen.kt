@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.jesuskrastev.ailingo.ui.composables.NonlazyGrid
 import com.jesuskrastev.ailingo.ui.composables.shimmerEffect
+import com.jesuskrastev.ailingo.ui.navigation.ChatRoute
 import com.jesuskrastev.ailingo.ui.navigation.Destination
 import com.jesuskrastev.ailingo.ui.navigation.GamesRoute
 import com.jesuskrastev.ailingo.ui.navigation.VocabularyRoute
@@ -194,11 +195,12 @@ fun WordDescription(
 @Composable
 fun PracticeButton(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        onClick = { /*TODO*/ }
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -432,7 +434,11 @@ fun HomeContent(
             DailyProgress()
         }
         item {
-            PracticeButton()
+            PracticeButton(
+                onClick = {
+                    onNavigateTo(ChatRoute)
+                },
+            )
         }
         item {
             if(!state.isLoading)
