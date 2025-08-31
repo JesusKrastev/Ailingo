@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayCircle
@@ -335,8 +336,8 @@ fun QuickAccessList(
             text = "Pronunciación",
         ),
         Activity(
-            icon = Icons.Default.Book,
-            text = "Historias",
+            icon = Icons.Default.Chat,
+            text = "Chat",
         ),
     )
 
