@@ -12,6 +12,9 @@ import com.jesuskrastev.ailingo.ui.features.games.match.MatchViewModel
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderState
 import com.jesuskrastev.ailingo.ui.features.games.order.OrderViewModel
+import com.jesuskrastev.ailingo.ui.features.games.phrases.CompleteGameScreen
+import com.jesuskrastev.ailingo.ui.features.games.phrases.CompleteState
+import com.jesuskrastev.ailingo.ui.features.games.phrases.PhrasesViewModel
 import com.jesuskrastev.ailingo.ui.features.games.stories.HistoryGameScreen
 import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesState
 import com.jesuskrastev.ailingo.ui.features.games.stories.StoriesViewModel
@@ -69,6 +72,21 @@ fun NavGraphBuilder.storiesGameScreen() {
         val state by vm.state.collectAsStateWithLifecycle(initialValue = StoriesState())
 
         HistoryGameScreen(
+            state = state,
+            onEvent = vm::onEvent,
+        )
+    }
+}
+
+@Serializable
+object CompleteGameRoute : Destination
+
+fun NavGraphBuilder.completeGameScreen() {
+    composable<CompleteGameRoute> {
+        val vm: PhrasesViewModel = hiltViewModel()
+        val state by vm.state.collectAsStateWithLifecycle(initialValue = CompleteState())
+
+        CompleteGameScreen(
             state = state,
             onEvent = vm::onEvent,
         )
