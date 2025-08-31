@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +35,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -106,9 +111,11 @@ fun AssistantMessage(
 fun ChatList(
     modifier: Modifier = Modifier,
     messages: List<MessageState>,
+    listState: LazyListState,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -131,10 +138,12 @@ fun ChatList(
 fun ChatContent(
     modifier: Modifier = Modifier,
     state: ChatState,
+    listState: LazyListState,
 ) {
     ChatList(
         modifier = modifier,
         messages = state.messages,
+        listState = listState,
     )
 }
 
@@ -205,6 +214,7 @@ fun ChatActions(
     modifier: Modifier = Modifier,
     isThinking: Boolean,
     prompt: String,
+
     onChangePrompt: (String) -> Unit,
     onSend: () -> Unit
 ) {
@@ -252,6 +262,14 @@ fun ChatScreen(
     state: ChatState,
     onEvent: (ChatEvent) -> Unit,
 ) {
+    val listState: LazyListState = rememberLazyListState()
+    val isScrolled by remember {
+        derivedStateOf {
+            val lastIndex = state.messages.lastIndex
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == lastIndex
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets.statusBars,
@@ -276,6 +294,7 @@ fun ChatScreen(
         ChatContent(
             modifier = Modifier.padding(paddingValues),
             state = state,
+            listState = listState,
         )
     }
 }
