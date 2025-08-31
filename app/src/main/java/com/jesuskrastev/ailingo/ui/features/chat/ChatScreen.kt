@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -146,7 +147,7 @@ fun SendButton(
     Box(
         modifier = modifier
             .size(OutlinedTextFieldDefaults.MinHeight)
-            .clip(RoundedCornerShape(10.dp))
+            .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)
             .clickable(
                 enabled = enabled,
@@ -175,7 +176,7 @@ fun ChatInput(
         onValueChange = { text ->
             if (text.length <= 2000) onChange(text)
         },
-        shape = RoundedCornerShape(16.dp),
+        shape = CircleShape,
         singleLine = true,
         trailingIcon = {
             if (prompt.isNotEmpty()) {
@@ -211,7 +212,7 @@ fun ChatActions(
 
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         ChatInput(
             modifier = Modifier.weight(1f),
@@ -235,19 +236,13 @@ fun ChatBottomAppBar(
     isThinking: Boolean,
     onEvent: (ChatEvent) -> Unit,
 ) {
-    BottomAppBar(
-        modifier = modifier,
-        tonalElevation = 0.dp,
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        ChatActions(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            prompt = prompt,
-            isThinking = isThinking,
-            onChangePrompt = { onEvent(ChatEvent.OnPromptChange(it)) },
-            onSend = { onEvent(ChatEvent.OnPromptSend) },
-        )
-    }
+    ChatActions(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        prompt = prompt,
+        isThinking = isThinking,
+        onChangePrompt = { onEvent(ChatEvent.OnPromptChange(it)) },
+        onSend = { onEvent(ChatEvent.OnPromptSend) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
