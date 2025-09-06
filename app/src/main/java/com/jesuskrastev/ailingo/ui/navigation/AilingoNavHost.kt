@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.jesuskrastev.ailingo.ui.features.home.HomeViewModel
+import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyViewModel
 
 @Composable
 fun AilingoNavHost(
@@ -13,6 +14,7 @@ fun AilingoNavHost(
     navController: NavHostController
 ) {
     val vmHome: HomeViewModel = hiltViewModel()
+    val vmVocabulary: VocabularyViewModel = hiltViewModel()
 
     NavHost(
         modifier = modifier,
@@ -35,6 +37,7 @@ fun AilingoNavHost(
         completeGameScreen()
         storiesGameScreen()
         vocabularyScreen(
+            vm = vmVocabulary,
             onNavigateTo = { destination ->
                 navController.navigate(destination)
             },

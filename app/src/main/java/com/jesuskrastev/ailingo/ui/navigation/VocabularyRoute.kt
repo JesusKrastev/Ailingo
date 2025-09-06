@@ -18,10 +18,10 @@ import kotlinx.serialization.Serializable
 object VocabularyRoute : Destination
 
 fun NavGraphBuilder.vocabularyScreen(
+    vm: VocabularyViewModel,
     onNavigateTo: (Destination) -> Unit,
 ) {
     composable<VocabularyRoute> {
-        val vm: VocabularyViewModel = hiltViewModel()
         val state by vm.state.collectAsStateWithLifecycle(initialValue = VocabularyState())
 
         VocabularyScreen(
