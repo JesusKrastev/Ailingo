@@ -5,7 +5,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.jesuskrastev.ailingo.ui.features.chat.ChatState
 import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyScreen
 import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyState
 import com.jesuskrastev.ailingo.ui.features.vocabulary.VocabularyViewModel

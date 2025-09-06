@@ -65,6 +65,7 @@ import com.jesuskrastev.ailingo.ui.navigation.ChatRoute
 import com.jesuskrastev.ailingo.ui.navigation.Destination
 import com.jesuskrastev.ailingo.ui.navigation.GamesRoute
 import com.jesuskrastev.ailingo.ui.navigation.VocabularyRoute
+import com.jesuskrastev.ailingo.ui.navigation.WritingRoute
 
 @Composable
 fun TermOfTheDay(
@@ -329,6 +330,7 @@ fun QuickAccessList(
     modifier: Modifier = Modifier,
     onNavigateToGames: () -> Unit,
     onNavigateToVocabulary: () -> Unit,
+    onNavigateToWriting: () -> Unit,
 ) {
     @Immutable
     data class Activity(
@@ -354,6 +356,7 @@ fun QuickAccessList(
         Activity(
             icon = Icons.Default.Edit,
             text = "Escritura",
+            onClick = onNavigateToWriting,
         ),
     )
 
@@ -422,6 +425,7 @@ fun HomeContent(
         QuickAccessList(
             onNavigateToGames = { onNavigateTo(GamesRoute) },
             onNavigateToVocabulary = { onNavigateTo(VocabularyRoute) },
+            onNavigateToWriting = { onNavigateTo(WritingRoute) },
         )
     }
 }
