@@ -1,6 +1,7 @@
 package com.jesuskrastev.ailingo.ui.features.vocabulary
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,11 +12,15 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -52,6 +57,41 @@ fun DefinitionList(
 }
 
 @Composable
+fun EmptyDefinitions(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Icon(
+                modifier = Modifier.size(48.dp),
+                imageVector = Icons.Default.List,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "No hay definiciones",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Text(
+                    text = "Genera definiciones para empezar a aprender",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun VocabularyContent(
     modifier: Modifier = Modifier,
     state: VocabularyState,
@@ -62,13 +102,21 @@ fun VocabularyContent(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        DefinitionList(
-            modifier = Modifier.weight(1f),
-            definitions = state.definitions,
-        )
+        when {
+            state.definitions.isEmpty() ->
+                EmptyDefinitions(
+                    modifier = Modifier.weight(1f),
+                )
+            else ->
+                DefinitionList(
+                    modifier = Modifier.weight(1f),
+                    definitions = state.definitions,
+                )
+        }
         Summary(
             count = state.definitions.count { it.isLearned },
             isGenerating = state.isGenerating,
+            haveDefinitions = state.definitions.isNotEmpty(),
             onGenerate = { onEvent(VocabularyEvent.OnGenerateDefinitions) },
             onLearn = { onNavigateTo(FlashcardsRoute) },
         )
@@ -79,6 +127,7 @@ fun VocabularyContent(
 fun Summary(
     modifier: Modifier = Modifier,
     count: Int,
+    haveDefinitions: Boolean,
     isGenerating: Boolean,
     onGenerate: () -> Unit,
     onLearn: () -> Unit,
@@ -141,6 +190,7 @@ fun Summary(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
+            enabled = haveDefinitions,
             shape = RoundedCornerShape(12.dp),
             onClick = onLearn,
         ) {
