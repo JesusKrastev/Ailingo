@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Mic
@@ -351,8 +352,8 @@ fun QuickAccessList(
             text = "Pronunciación",
         ),
         Activity(
-            icon = Icons.Default.Chat,
-            text = "Chat",
+            icon = Icons.Default.Edit,
+            text = "Escritura",
         ),
     )
 
