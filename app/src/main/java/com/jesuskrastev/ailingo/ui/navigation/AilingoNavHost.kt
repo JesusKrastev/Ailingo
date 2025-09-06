@@ -39,6 +39,7 @@ fun AilingoNavHost(
                 navController.navigate(destination)
             },
         )
+        flashcardsScreen()
         chatScreen()
     }
 }
