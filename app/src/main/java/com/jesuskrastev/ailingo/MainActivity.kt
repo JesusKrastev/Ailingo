@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.jesuskrastev.ailingo.ui.features.onboarding.language.LanguageScreen
+import com.jesuskrastev.ailingo.ui.features.onboarding.level.LevelScreen
 import com.jesuskrastev.ailingo.ui.navigation.AilingoNavHost
 import com.jesuskrastev.ailingo.ui.theme.AilingoTheme
 import dagger.hilt.android.AndroidEntryPoint

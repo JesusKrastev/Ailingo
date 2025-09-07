@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -86,4 +87,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     // Splash
     implementation(libs.androidx.core.splashscreen)
+    // Charts
+    implementation (libs.compose.charts)
+    // Firebase
+    implementation(libs.firebase.bom)
 }

@@ -21,6 +21,7 @@ fun AilingoNavHost(
         navController = navController,
         startDestination = HomeRoute,
     ) {
+        onboardingScreen()
         homeScreen(
             vm = vmHome,
             onNavigateTo = { destination ->
