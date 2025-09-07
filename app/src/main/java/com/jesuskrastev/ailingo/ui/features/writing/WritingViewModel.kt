@@ -60,9 +60,9 @@ class WritingViewModel @Inject constructor(
                         """
                         Generate a JSON object for giving feedback on the English text: ${state.value.text}. The object must include:
 
-                        - "error": a description of the mistakes in the text in Spanish
+                        - "error": "error": a description of the mistakes in the text in Spanish, but mentioning the incorrect phrases or parts in the language used
                         
-                        - "suggestion": concrete suggestions to improve the text level in Spanish
+                        - "suggestion": concrete suggestions to improve the text level in Spanish, but giving the examples or improvements in the language used
                         
                         - "correctText": the full corrected text in English
                         
